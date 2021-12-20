@@ -6,7 +6,7 @@
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 08:34:07 by elouisia          #+#    #+#             */
-/*   Updated: 2021/12/13 12:43:53 by elouisia         ###   ########.fr       */
+/*   Updated: 2021/12/20 14:54:33 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,40 +17,28 @@ size_t	ft_strlen(char *s)
 	int	i;
 
 	i = 0;
+	if (!s)
+		return (0);
 	while (s[i])
 		i++;
 	return (i);
 }
 
-void	ft_putchar_fd(char c, int fd)
+char	*ft_strchr(const char *s, int c)
 {
-	write(fd, &c, 1);
-}
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	int	i;
+	int		i;
+	char	*s1;
 
 	i = 0;
-	while (s[i])
+	s1 = (char *)s;
+	if (!s)
+		return (0);
+	if ((unsigned char)c == '\0')
+		return (&s1[ft_strlen(s1)]);
+	while (s1[i])
 	{
-		ft_putchar_fd(s[i], fd);
-		i++;
-	}
-}
-void	*ft_memchr(const void *s, int c, size_t n)
-{
-	size_t			i;
-	unsigned char	*str;
-	unsigned char	u;
-
-	i = 0;
-	str = (unsigned char *)s;
-	u = (unsigned char)c;
-	while (i < n)
-	{
-		if (str[i] == u)
-			return (&str[i]);
+		if (s1[i] == (unsigned char) c)
+			return (&s1[i]);
 		i++;
 	}
 	return (0);
