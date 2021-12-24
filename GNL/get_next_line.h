@@ -6,7 +6,7 @@
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 08:34:29 by elouisia          #+#    #+#             */
-/*   Updated: 2021/12/20 14:01:29 by elouisia         ###   ########.fr       */
+/*   Updated: 2021/12/24 12:51:31 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,12 @@
 
 char	*get_next_line(int fd);
 size_t	ft_strlen(char *s);
-char	*ft_strchr(const char *s, int c);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strchr(char *s, int c);
+char	*ft_strjoin(char *s1, char *s2);
+char	*ft_strdup(char *s);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
+char	*ft_substr(char *s, unsigned int start, size_t len);
+char	*ft_strcpy(char *dst, char *src);
+char	*ft_strcat(char *dst, char *src);
 
 #endif
