@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/13 08:34:21 by elouisia          #+#    #+#             */
-/*   Updated: 2021/12/30 17:31:34 by elouisia         ###   ########.fr       */
+/*   Created: 2021/12/30 04:05:01 by elouisia          #+#    #+#             */
+/*   Updated: 2021/12/30 17:26:09 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static int	line_len(char *dirty_line)
 {
@@ -73,7 +73,7 @@ static char	*read_line(char *aside, int fd, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*aside;
+	static char	*aside[1024];
 	char		*dirty_line;
 	char		*line_to_print;
 	char		buffer[BUFFER_SIZE + 1];
@@ -82,25 +82,25 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (read(fd, buffer, 0) == -1)
 		return (NULL);
-	dirty_line = read_line(aside, fd, buffer);
+	dirty_line = read_line(aside[fd], fd, buffer);
 	if (!dirty_line)
 		return (NULL);
 	line_to_print = clean_line(dirty_line);
 	if (!line_to_print)
 		return (NULL);
-	aside = ft_strdup(&dirty_line[line_len(dirty_line)]);
+	aside[fd] = ft_strdup(&dirty_line[line_len(dirty_line)]);
 	free(dirty_line);
 	return (line_to_print);
 }
 
-// #include <stdio.h>
+//  #include <stdio.h>
 
 // int	main(void)
 // {
 //  	int		fd;
 //  	char	*s;
 
-// 	fd = open("line.txt", O_RDONLY);
+// 	fd = open("lotr.txt", O_RDONLY);
 //  	//fd = 0;
 //  	if (fd == -1)
 // 	{
@@ -110,7 +110,7 @@ char	*get_next_line(int fd)
 // 	do
 // 	{
 // 		s = get_next_line(fd);
-//  		printf("GNL : %s", s);
+//  		printf("GNL : %s\n", s);
 // 		free(s);
 // 	} while (s != NULL);
 //  	close(fd);
