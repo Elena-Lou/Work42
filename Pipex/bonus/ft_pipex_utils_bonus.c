@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pipex_utils.c                                   :+:      :+:    :+:   */
+/*   ft_pipex_utils_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/07 15:28:19 by elouisia          #+#    #+#             */
-/*   Updated: 2022/02/15 14:47:50 by elouisia         ###   ########.fr       */
+/*   Created: 2022/02/15 14:18:21 by elouisia          #+#    #+#             */
+/*   Updated: 2022/02/15 14:45:18 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 char	*get_path(char **env)
 {
@@ -29,7 +29,7 @@ char	*get_path(char **env)
 	return (path);
 }
 
-void	execute_cmd(t_data *data, char *cmd)
+void	execute_cmd(t_databonus *data, char *cmd)
 {
 	char	*path_check;
 	char	**tab_cmd;

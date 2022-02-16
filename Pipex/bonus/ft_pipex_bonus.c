@@ -1,71 +1,74 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pipex.c                                         :+:      :+:    :+:   */
+/*   ft_pipex_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/02 18:02:27 by elouisia          #+#    #+#             */
-/*   Updated: 2022/02/16 15:40:39 by elouisia         ###   ########.fr       */
+/*   Created: 2022/02/15 14:18:17 by elouisia          #+#    #+#             */
+/*   Updated: 2022/02/16 17:28:24 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
-static int	first_child(int pipefd[2], int infile, t_data *data)
+static int	first_child(int pipefd[2], int infile, t_databonus *data, char *cmd)
 {
-	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
-	dup2(infile, STDIN_FILENO);
-	execute_cmd(data, data->av[2]);
+	dup2(pipefd[0], STDIN_FILENO);
+	if (pid == 0)
+		execute_cmd(data, cmd);
+	waitpid(pid, NULL, 0);
 	close(pipefd[1]);
+	close(pipefd[0]);
 	close(infile);
-	exit(0);
+	return (EXIT_SUCCESS);
 }
 
-static int	second_child(int pipefd[2], int outfile, t_data *data)
+static int	second_child(int outfile, t_databonus *data, char *cmd)
 {
+	int	pipefd[2];
+
 	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
 	dup2(outfile, STDOUT_FILENO);
-	execute_cmd(data, data->av[3]);
+	execute_cmd(data, cmd);
 	close(pipefd[0]);
 	close(outfile);
-	exit(0);
+	return (EXIT_SUCCESS);
 }
 
-int	ft_pipex(int file[2], t_data *data)
+int	ft_pipex(int ac, int file[2], t_databonus *data)
 {
-	int		pipefd[2];
+	int		i;
 	int		pid1;
 	int		pid2;
-	int		status;
+	int		pipefd[2];
 
 	if (pipe(pipefd) == -1)
 		return (EXIT_FAILURE);
 	pid1 = fork();
-	if (pid1 < 0)
-		return (EXIT_FAILURE);
-	if (pid1 == 0)
-		first_child(pipefd, file[0], data);
-	pid2 = fork();
-	if (pid2 < 0)
-		return (EXIT_FAILURE);
-	if (pid2 == 0)
-		second_child(pipefd, file[1], data);
+	i = 2;
+	dup2(file[0], STDIN_FILENO);
+	while (i < ac - 1)
+	{
+		first_child(pipefdfile[0], data, data->av[i]);
+		i++;
+	}
+	if (i == ac - 2)
+		second_child(file[1], data, data->av[i]);
 	close(pipefd[0]);
 	close(pipefd[1]);
-	waitpid(pid1, &status, 0);
-	waitpid(pid2, &status, 0);
+	waitpid(pid1, NULL, 0);
+	waitpid(pid2, NULL, 0);
 	return (EXIT_SUCCESS);
 }
 
 int	main(int ac, char **av, char **envp)
 {
-	int		file[2];
-	t_data	data;
+	int			file[2];
+	t_databonus	data;
 
-	if (ac != 5)
+	if (ac < 5)
 	{
 		ft_putstr_fd("Usage : ./pipex file1 cmd1 cmd2 file2\n", 1);
 		return (EXIT_FAILURE);
@@ -80,10 +83,10 @@ int	main(int ac, char **av, char **envp)
 	data.path = get_path(envp);
 	if (!data.path)
 		return (EXIT_FAILURE);
-	data.tab_path = ft_split(data.path, ':');
 	data.av = av;
 	data.env = envp;
-	ft_pipex(file, &data);
+	data.tab_path = ft_split(data.path, ':');
+	ft_pipex(ac, file, &data);
 	free(data.path);
 	free_tab(data.tab_path);
 	return (EXIT_SUCCESS);
