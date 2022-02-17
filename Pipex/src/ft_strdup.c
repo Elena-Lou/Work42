@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elouisia <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/05 15:55:49 by elouisia          #+#    #+#             */
-/*   Updated: 2021/12/05 15:55:53 by elouisia         ###   ########.fr       */
+/*   Created: 2021/11/30 12:37:33 by elouisia          #+#    #+#             */
+/*   Updated: 2022/02/16 18:36:51 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
-t_list	*ft_lstnew(void *content)
+char	*ft_strdup(const char *s)
 {
-	t_list	*lst;
+	int		i;
+	char	*dst;
 
-	lst = malloc(sizeof(*lst));
-	if (!lst)
-		return (NULL);
-	lst->content = content;
-	lst->next = NULL;
-	return (lst);
+	i = 0;
+	dst = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!dst)
+		return (0);
+	while (s[i])
+	{
+		dst[i] = s[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (dst);
 }

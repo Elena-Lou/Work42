@@ -6,11 +6,11 @@
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 15:05:57 by elouisia          #+#    #+#             */
-/*   Updated: 2021/12/07 21:49:41 by elouisia         ###   ########.fr       */
+/*   Updated: 2022/02/16 18:36:41 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
 static int	ft_wordcount(char const *s, char c)
 {
@@ -87,26 +87,3 @@ char	**ft_split(char const *s, char c)
 	tab[j] = NULL;
 	return (tab);
 }
-/*
-#include <stdio.h>
-
-int	main (int ac, char **av)
-{
-			char	sep;
-		char	**tab;
-		int		i;
-
-		i = 0;
-	if (ac == 3)
-	{
-		sep = av[2][0];
-		tab	= ft_split(av[1], sep);
-		while (tab[i])
-		{
-			printf("%s\n", tab[i]);
-			i++;
-		}
-	} 
-	ft_checkmalloc(tab, tab[i], i);
-	return (0);
-}*/

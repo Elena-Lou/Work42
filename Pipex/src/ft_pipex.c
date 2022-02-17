@@ -6,7 +6,7 @@
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 18:02:27 by elouisia          #+#    #+#             */
-/*   Updated: 2022/02/16 15:40:39 by elouisia         ###   ########.fr       */
+/*   Updated: 2022/02/17 17:06:27 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	ft_pipex(int file[2], t_data *data)
 	return (EXIT_SUCCESS);
 }
 
-int	main(int ac, char **av, char **envp)
+int	main(int ac, char **av, char **env)
 {
 	int		file[2];
 	t_data	data;
@@ -70,19 +70,14 @@ int	main(int ac, char **av, char **envp)
 		ft_putstr_fd("Usage : ./pipex file1 cmd1 cmd2 file2\n", 1);
 		return (EXIT_FAILURE);
 	}
-	if ((access(av[2], F_OK | X_OK) != 0 && !envp[0])
-		|| (access(av[3], F_OK | X_OK) != 0 && !envp[0]))
+	if ((access(av[2], F_OK | X_OK) != 0 && !env[0])
+		|| (access(av[3], F_OK | X_OK) != 0 && !env[0]))
 		return (EXIT_FAILURE);
 	file[0] = open(av[1], O_RDONLY);
 	file[1] = open(av[4], O_RDWR | O_TRUNC | O_CREAT, 0644);
 	if (check_files(file, av[1]) != 0)
 		return (EXIT_FAILURE);
-	data.path = get_path(envp);
-	if (!data.path)
-		return (EXIT_FAILURE);
-	data.tab_path = ft_split(data.path, ':');
-	data.av = av;
-	data.env = envp;
+	set_data(av, env, &data, file);
 	ft_pipex(file, &data);
 	free(data.path);
 	free_tab(data.tab_path);

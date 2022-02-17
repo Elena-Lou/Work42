@@ -6,7 +6,7 @@
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 14:18:21 by elouisia          #+#    #+#             */
-/*   Updated: 2022/02/15 14:45:18 by elouisia         ###   ########.fr       */
+/*   Updated: 2022/02/17 17:03:29 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,7 @@ void	execute_cmd(t_databonus *data, char *cmd)
 	{
 		path_check = ft_strjoin(data->tab_path[i], tab_cmd[0]);
 		if (access(path_check, F_OK | X_OK) == 0)
-		{
 			execve(path_check, tab_cmd, data->env);
-			free(path_check);
-			free_tab(tab_cmd);
-		}
 		free(path_check);
 		i++;
 	}
@@ -84,4 +80,18 @@ int	check_files(int *file, char *av)
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
+}
+
+void	set_data(char **av, char **env, t_databonus *data, int file[2])
+{
+	data->path = get_path(env);
+	if (!data->path)
+	{
+		close(file[1]);
+		close(file[0]);
+		return ;
+	}
+	data->tab_path = ft_split(data->path, ':');
+	data->av = av;
+	data->env = env;
 }

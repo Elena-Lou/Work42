@@ -1,34 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 12:29:31 by elouisia          #+#    #+#             */
-/*   Updated: 2021/12/08 14:45:17 by elouisia         ###   ########.fr       */
+/*   Created: 2021/11/29 18:10:19 by elouisia          #+#    #+#             */
+/*   Updated: 2022/02/16 18:37:08 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
-	size_t	s_length;
-	char	*str;
 	size_t	i;
+	size_t	j;
+	char	*haystack;
+	char	*needle;
 
-	str = (char *)src;
-	s_length = ft_strlen(str);
 	i = 0;
-	if (size)
+	j = 0;
+	haystack = (char *)big;
+	needle = (char *)little;
+	if (!(*needle))
+		return (haystack);
+	while (i < len && haystack[i])
 	{
-		while ((i < size - 1) && (str[i]))
+		j = 0;
+		while (i + j < len && (haystack[i + j] == needle[j]) && needle[j])
 		{
-			dst[i] = str[i];
-			i++;
+			j++;
+			if (needle[j] == '\0')
+				return (&haystack[i]);
 		}
-		dst[i] = '\0';
+		i++;
 	}
-	return (s_length);
+	return (0);
 }

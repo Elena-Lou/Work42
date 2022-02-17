@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 11:26:39 by elouisia          #+#    #+#             */
-/*   Updated: 2022/02/11 17:00:18 by elouisia         ###   ########.fr       */
+/*   Created: 2021/12/01 14:41:53 by elouisia          #+#    #+#             */
+/*   Updated: 2022/02/16 18:42:09 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -23,12 +23,29 @@ size_t	ft_strlen(const char *s)
 		i++;
 	return (i);
 }
-/*
-#include <stdio.h>
-int	main(int ac, char **ar)
+
+char	*ft_strjoin(char *s1, char const *s2)
 {
-	if (ac == 2)
-		printf("ma fonction : %ld\n", ft_strlen(ar[1]));
-		printf("base : %ld\n", strlen(ar[1]));
-	return 0;
-}*/
+	char	*dest;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	if (!s1 && !s2)
+		return (NULL);
+	dest = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 2));
+	if (!dest)
+		return (NULL);
+	while (s1[i])
+		dest[j++] = s1[i++];
+	i = 0;
+	dest[j++] = '/';
+	while (s2[i])
+	{
+		dest[j + i] = s2[i];
+		i++;
+	}
+	dest[j + i] = '\0';
+	return (dest);
+}

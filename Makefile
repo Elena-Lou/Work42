@@ -4,22 +4,9 @@ SRCS_BONUS_DIR	= bonus/
 
 SRCS		= ./src/ft_pipex.c \
 			./src/ft_pipex_utils.c \
-			./src/ft_putstr_fd.c	\
-			./src/ft_split.c	\
-			./src/ft_strdup.c	\
-			./src/ft_strjoin.c	\
-			./src/ft_strnstr.c 	\
-			./src/ft_substr.c 	\
 
 SRCS_BONUS	= ./bonus/ft_pipex_bonus.c \
 			./bonus/ft_pipex_utils_bonus.c \
-			./src/ft_putstr_fd.c	\
-			./src/ft_split.c	\
-			./src/ft_strdup.c	\
-			./src/ft_strjoin.c	\
-			./src/ft_strnstr.c 	\
-			./src/ft_substr.c 	\
-
 
 OBJS		= $(SRCS:.c=.o)
 
@@ -41,7 +28,9 @@ NAME		= pipex
 
 BONUS_NAME	= pipex_bonus
 
-INCS		= -I include
+LIB_NAME	= libft/libft.a
+
+INCS		= -I include -I libft
 
 PURPLE		= \033[1;35m
 
@@ -57,29 +46,41 @@ NO_COLOUR	= \033[m
 all:	$(NAME)
 	@make $(NAME) -q && echo "$(GREEN)All good here !$(NO_COLOUR)"
 
--include $(DEPS)
 
 %.o:	%.c
 		$(CC) $(CFLAGS) -o $@ -c $< $(DEPSFLAGS) $(INCS)
 
-$(NAME): $(OBJS)
-		$(CC) $(CFLAGS) $^ -o $@ $(INCS)
+$(LIB_NAME):
+		@make --no-print-directory -s -C ./libft/ all
+		@echo	"$(PURPLE)\nLibft $(CYAN)compiled\n$(NO_COLOUR)"
+
+$(NAME): $(LIB_NAME) $(OBJS)
+		$(CC) $(CFLAGS) $(OBJS) -o $@ $(INCS) $(LIB_NAME)
 		@echo "$(ORANGE)Pipex$(CYAN) is ready$(NO_COLOUR)"
 
-$(BONUS_NAME): $(OBJS_BONUS)
-		$(CC) $(CFLAGS) $^ -o $@ $(INCS)
-		@echo "$(ORANGE)Pipex_bonus$(CYAN) is ready$(NO_COLOUR)"
+$(BONUS_NAME): $(LIB_NAME) $(OBJS_BONUS)
+		$(CC) $(CFLAGS) -o $@ $(OBJS_BONUS) $(LIB_NAME) $(INCS)
+		@echo "$(ORANGE)Pipexbonus$(CYAN) is ready$(NO_COLOUR)"
+
+makelib: $(LIB_NAME)
 
 bonus: $(BONUS_NAME)
 
 clean:
 		$(RM) $(OBJS) $(DEPS) $(OBJS_BONUS) $(DEPS_BONUS)
 
-fclean:	clean 
+fclean:	clean fcleanlib
 		$(RM) $(NAME) $(BONUS_NAME)
 
 re: fclean all
 
-rebonus: fclean bonus
+cleanlib:
+		@make --no-print-directory -s -C ./libft/ clean
+		@echo	"$(PURPLE)\nLibft $(CYAN)-o removed\n$(NO_COLOUR)"
 
-.PHONY: all clean fclean re bonus rebonus
+fcleanlib: cleanlib
+		@make --no-print-directory -s -C ./libft/ fclean
+		@echo	"$(PURPLE)\nLibft $(CYAN)-o && .a removed\n$(NO_COLOUR)"
+
+# -include $(DEPS)
+.PHONY: all clean fclean re cleanlib fcleanlib bonus
