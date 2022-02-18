@@ -6,7 +6,7 @@
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 15:28:19 by elouisia          #+#    #+#             */
-/*   Updated: 2022/02/17 17:02:04 by elouisia         ###   ########.fr       */
+/*   Updated: 2022/02/18 15:18:30 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,18 @@ void	execute_cmd(t_data *data, char *cmd)
 
 	i = 0;
 	tab_cmd = ft_split(cmd, ' ');
-	while (data->tab_path[i])
-	{	
-		path_check = ft_strjoin(data->tab_path[i], tab_cmd[0]);
-		if (access(path_check, F_OK | X_OK) == 0)
-			execve(path_check, tab_cmd, data->env);
-		free(path_check);
-		i++;
+	if (access(cmd, F_OK | X_OK) == 0)
+		execve(cmd, tab_cmd, data->env);
+	else
+	{
+		while (data->tab_path[i])
+		{
+			path_check = ft_strjoin(data->tab_path[i], tab_cmd[0]);
+			if (access(path_check, F_OK | X_OK) == 0)
+				execve(path_check, tab_cmd, data->env);
+			free(path_check);
+			i++;
+		}
 	}
 	perror("access ");
 	free_tab(tab_cmd);
@@ -84,14 +89,19 @@ int	check_files(int *file, char *av)
 
 void	set_data(char **av, char **env, t_data *data, int file[2])
 {
-	data->path = get_path(env);
-	if (!data->path)
+	if (!env[0])
+		data->path = NULL;
+	else
 	{
-		close(file[1]);
-		close(file[0]);
-		return ;
+		data->path = get_path(env);
+		if (!data->path)
+		{
+			close(file[1]);
+			close(file[0]);
+			return ;
+		}
+		data->tab_path = ft_split(data->path, ':');
 	}
-	data->tab_path = ft_split(data->path, ':');
 	data->av = av;
 	data->env = env;
 }

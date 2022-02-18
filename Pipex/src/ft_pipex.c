@@ -6,7 +6,7 @@
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 18:02:27 by elouisia          #+#    #+#             */
-/*   Updated: 2022/02/17 17:06:27 by elouisia         ###   ########.fr       */
+/*   Updated: 2022/02/18 14:56:03 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,10 @@ int	main(int ac, char **av, char **env)
 		return (EXIT_FAILURE);
 	set_data(av, env, &data, file);
 	ft_pipex(file, &data);
-	free(data.path);
-	free_tab(data.tab_path);
+	if (data.path != NULL)
+	{
+		free(data.path);
+		free_tab(data.tab_path);
+	}
 	return (EXIT_SUCCESS);
 }
