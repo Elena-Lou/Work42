@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/16 16:24:18 by elouisia          #+#    #+#             */
-/*   Updated: 2022/08/05 12:00:42 by elouisia         ###   ########.fr       */
+/*   Created: 2022/08/05 10:22:55 by elouisia          #+#    #+#             */
+/*   Updated: 2022/08/08 14:47:23 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	custom_usleep_death(t_philo *camus, unsigned int t)
 	end = start + t;
 	while (timestamp(camus) < end)
 	{
-		if (cake_or_death(camus))
+		if (cake_or_death(camus, NULL))
 			return (FAILURE);
 		usleep(10);
 	}

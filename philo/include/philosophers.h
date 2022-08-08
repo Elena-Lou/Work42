@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/28 17:00:39 by elouisia          #+#    #+#             */
-/*   Updated: 2022/08/05 11:59:16 by elouisia         ###   ########.fr       */
+/*   Created: 2022/08/05 10:20:22 by elouisia          #+#    #+#             */
+/*   Updated: 2022/08/08 14:02:02 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,22 @@
 typedef struct s_fork
 {
 	int				fork_id;
-	int				status;
 	pthread_mutex_t	f_mutex;
 }	t_fork;
 
 typedef struct s_philo
 {
+	pthread_mutex_t	c_mutex;
 	int				philo_id;
 	t_fork			*l_fork;
 	t_fork			*r_fork;
 	int				nb_philo;
-	unsigned int	launch_time;
 	unsigned int	cigue_ti;
 	int				banquet_ti;
 	int				dream_ti;
 	int				m_count;
 	int				m_nb;
+	unsigned int	launch_time;
 	unsigned int	start;
 	unsigned int	last_banquet;
 	struct s_root	*root;
@@ -133,7 +133,7 @@ int				ft_dream(t_philo *camus);
 **	CAKEORDEATH.c
 */
 
-int				cake_or_death(t_philo *camus);
+int				cake_or_death(t_philo *camus, char *msg);
 
 /*
 **	HADES.C

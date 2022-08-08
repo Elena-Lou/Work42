@@ -6,7 +6,7 @@
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 17:36:31 by elouisia          #+#    #+#             */
-/*   Updated: 2022/08/05 16:54:39 by elouisia         ###   ########.fr       */
+/*   Updated: 2022/08/08 14:39:51 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,13 @@ need to release the fork's mutex straight away */
 void	solo_banquet(t_philo *camus)
 {
 	pthread_mutex_lock(&camus->l_fork->f_mutex);
-	print_msg(camus, " has taken a fork\n");
-	pthread_mutex_unlock(&camus->l_fork->f_mutex);
+	cake_or_death(camus, " has taken a fork\n");
+	custom_usleep(camus->cigue_ti);
+	if(cake_or_death(camus, " died\n"))
+		{
+			pthread_mutex_unlock(&camus->l_fork->f_mutex);
+			return ;
+		}
 }
 
 /* Can the philos take their forks ? First they check the common Schroedinger :
@@ -28,104 +33,36 @@ if a philo had died, the process ends. Otherwise, the first philo is
 left handed while the others are right handed, to prevent mutex's dependance */
 int	grab_forks(t_philo *camus)
 {
-	if (camus->philo_id % 2 == 1)
+	if (camus->philo_id == 1)
 	{
-		while (1)
+		pthread_mutex_lock(&camus->l_fork->f_mutex);
+		if (cake_or_death(camus, " has taken a fork\n"))
 		{
-			while (1)
-			{
-				if (cake_or_death(camus))
-				{
-					drop_forks(camus);
-					return (FAILURE);
-				}	
-				pthread_mutex_lock(&camus->l_fork->f_mutex);
-				if (camus->l_fork->status == 0)
-				{
-					print_msg(camus, " has taken a fork\n");
-					camus->l_fork->status = 1;
-					pthread_mutex_unlock(&camus->l_fork->f_mutex);
-					break ;
-				}
-				else
-				{
-					pthread_mutex_unlock(&camus->l_fork->f_mutex);
-					usleep (80);
-				}
-			}
-			while (1)
-			{
-				if (cake_or_death(camus))
-				{
-					drop_forks(camus);
-					return (FAILURE);
-				}	
-				pthread_mutex_lock(&camus->r_fork->f_mutex);
-				if (camus->r_fork->status == 0)
-				{
-					print_msg(camus, " has taken a fork\n");
-					camus->r_fork->status = 1;
-					pthread_mutex_unlock(&camus->r_fork->f_mutex);
-					break ;
-				}
-				else
-				{
-					pthread_mutex_unlock(&camus->r_fork->f_mutex);
-					usleep (80);
-				}
-			}
-			break ;
+			pthread_mutex_unlock(&camus->l_fork->f_mutex);
+			return (FAILURE);
+		}
+		pthread_mutex_lock(&camus->r_fork->f_mutex);
+		if (cake_or_death(camus, " has taken a fork\n"))
+		{
+			pthread_mutex_unlock(&camus->l_fork->f_mutex);
+			pthread_mutex_unlock(&camus->r_fork->f_mutex);
+			return (FAILURE);
 		}
 	}
 	else
 	{
-		
-		while (1)
+		pthread_mutex_lock(&camus->r_fork->f_mutex);
+		if (cake_or_death(camus, " has taken a fork\n"))
 		{
-			while (1)
-			{
-				if (cake_or_death(camus))
-				{
-					drop_forks(camus);
-					return (FAILURE);
-				}	
-				pthread_mutex_lock(&camus->r_fork->f_mutex);
-				if (camus->r_fork->status == 0)
-				{
-					print_msg(camus, " has taken a fork\n");
-					camus->r_fork->status = 1;
-					pthread_mutex_unlock(&camus->r_fork->f_mutex);
-					break ;
-				}
-				else
-				{
-					pthread_mutex_unlock(&camus->r_fork->f_mutex);
-					usleep (80);
-				}
-			}
-			while (1)
-			{
-				if (cake_or_death(camus))
-				{
-					drop_forks(camus);
-					return (FAILURE);
-				}	
-				pthread_mutex_lock(&camus->l_fork->f_mutex);
-				if (camus->l_fork->status == 0)
-				{
-					print_msg(camus, " has taken a fork\n");
-					camus->l_fork->status = 1;
-					pthread_mutex_unlock(&camus->l_fork->f_mutex);
-					break ;
-				}
-				else
-				{
-					pthread_mutex_unlock(&camus->l_fork->f_mutex);
-					usleep (80);
-				}
-				break ;
-			}
-			break ;
+			pthread_mutex_unlock(&camus->r_fork->f_mutex);
+			return (FAILURE);
+		}
+		pthread_mutex_lock(&camus->l_fork->f_mutex);
+		if (cake_or_death(camus, " has taken a fork\n"))
+		{
+			pthread_mutex_unlock(&camus->r_fork->f_mutex);
+			pthread_mutex_unlock(&camus->l_fork->f_mutex);
+			return (FAILURE);
 		}
 	}
 	return (SUCCESS);
@@ -135,27 +72,21 @@ int	grab_forks(t_philo *camus)
 and the process terminates. Otherwise, they just put them back on the table */
 int	drop_forks(t_philo *camus)
 {
-	if (cake_or_death(camus))
-		return (FAILURE);
-	pthread_mutex_lock(&camus->l_fork->f_mutex);
-	pthread_mutex_unlock(&camus->l_fork->f_mutex);
-	if (camus->philo_id % 2 ==  1)
+	if (cake_or_death(camus, NULL))
 	{
-		pthread_mutex_lock(&camus->l_fork->f_mutex);
-		camus->l_fork->status = 0;
-		pthread_mutex_unlock(&camus->l_fork->f_mutex);
-		pthread_mutex_lock(&camus->r_fork->f_mutex);
-		camus->r_fork->status = 0;
 		pthread_mutex_unlock(&camus->r_fork->f_mutex);
+		pthread_mutex_unlock(&camus->l_fork->f_mutex);
+		return (FAILURE);
+	}
+	if (camus->philo_id == 1)
+	{
+		pthread_mutex_unlock(&camus->r_fork->f_mutex);
+		pthread_mutex_unlock(&camus->l_fork->f_mutex);
 	}
 	else
 	{
-		pthread_mutex_lock(&camus->r_fork->f_mutex);
-		camus->r_fork->status = 0;
-		pthread_mutex_unlock(&camus->r_fork->f_mutex);
-		pthread_mutex_lock(&camus->l_fork->f_mutex);
-		camus->l_fork->status = 0;
 		pthread_mutex_unlock(&camus->l_fork->f_mutex);
+		pthread_mutex_unlock(&camus->r_fork->f_mutex);
 	}
 	return (SUCCESS);
 }
@@ -186,10 +117,16 @@ int	ft_banquet(t_philo *camus)
 	}
 	if (grab_forks(camus))
 		return (FAILURE);
-	print_msg(camus, " is eating\n");
+	cake_or_death(camus, " is eating\n");
+	pthread_mutex_lock(&camus->c_mutex);
 	camus->last_banquet = timestamp(camus);
+	pthread_mutex_unlock(&camus->c_mutex);
 	if (custom_usleep_death(camus, camus->banquet_ti))
+	{
+		pthread_mutex_unlock(&camus->l_fork->f_mutex);
+		pthread_mutex_unlock(&camus->r_fork->f_mutex);
 		return (FAILURE);
+	}
 	if (drop_forks(camus))
 		return (FAILURE);
 	if (check_meal_count(camus))
