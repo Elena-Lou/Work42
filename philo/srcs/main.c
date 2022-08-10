@@ -6,7 +6,7 @@
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 17:06:26 by elouisia          #+#    #+#             */
-/*   Updated: 2022/08/08 14:35:47 by elouisia         ###   ########.fr       */
+/*   Updated: 2022/08/09 18:06:01 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,21 @@ Once it stops, the threads are joined to the main process - thus terminating */
 // 		}
 // 		i++;
 // 	}
-	// are_you_dead(camus, i);
+	// hades(camus, i);
 // 	return (SUCCESS);
 // }
+int	join_threads(t_root *root)
+{
+	int	i;
+	
+	i = 0;
+	while (i < root->nb_philo)
+	{
+		pthread_join(root->th[i], NULL);
+		i++;
+	}
+	return (SUCCESS);
+}
 
 int	delayed_launch(t_philo *camus)
 {
@@ -53,8 +65,7 @@ int	delayed_launch(t_philo *camus)
 		&camus->root->camus[i]);
 		i++;
 	}
-	i = 0;
-	// are_you_dead(camus, i);
+	hades(camus, i);
 	return (SUCCESS);
 }
 

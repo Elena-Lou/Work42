@@ -6,7 +6,7 @@
 /*   By: elouisia <elouisia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 10:20:22 by elouisia          #+#    #+#             */
-/*   Updated: 2022/08/08 14:02:02 by elouisia         ###   ########.fr       */
+/*   Updated: 2022/08/09 17:42:04 by elouisia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_philo
 	int				dream_ti;
 	int				m_count;
 	int				m_nb;
+	int				m_checked;
 	unsigned int	launch_time;
 	unsigned int	start;
 	unsigned int	last_banquet;
@@ -69,6 +70,8 @@ typedef struct s_root
 	int				banquet_ti;
 	int				dream_ti;
 	int				m_nb;
+	int				m_checked;
+	unsigned int	start;
 	t_philo			*camus;
 	t_fork			*fork;
 }	t_root;
@@ -133,13 +136,14 @@ int				ft_dream(t_philo *camus);
 **	CAKEORDEATH.c
 */
 
-int				cake_or_death(t_philo *camus, char *msg);
+int				cake_or_death(t_philo *camus);
+int				are_you_dead(t_philo *camus);
 
 /*
 **	HADES.C
 */
 
-void			are_you_dead(t_philo *camus, int i);
+int			hades(t_philo *camus, int i);
 
 /*
 **	BANQUET.C

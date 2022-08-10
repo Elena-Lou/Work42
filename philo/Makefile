@@ -19,7 +19,7 @@ SRCS = main.c \
 		time_management.c \
 		routine.c	\
 		prints.c	\
-		cakeordeath.c	\
+		are_you_dead.c	\
 		hades.c	\
 		banquet.c
 
